@@ -31,7 +31,7 @@ class movie{
         })
         .catch((err) => {
             console.log(err);
-            res.status(500).json(err)
+            res.status(500).json(err.name)
         })
     }
 
@@ -43,7 +43,7 @@ class movie{
             res.status(200).json(data[1][0])
         })
         .catch((err) => {
-            err
+            console.log(err);
             if(err.errors[0].message){
                 res.status(400).json(err.errors[0].message)
             }else if(err[0] == 0){
