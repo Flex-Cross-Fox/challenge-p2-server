@@ -1,30 +1,14 @@
 'use strict';
-const { User } = require('../models')
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Users', {
+    return queryInterface.createTable('Genres', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      username: {
-        type: Sequelize.STRING
-      },
-      email: {
-        type: Sequelize.STRING
-      },
-      password: {
-        type: Sequelize.STRING
-      },
-      role: {
-        type: Sequelize.STRING
-      },
-      phoneNumber: {
-        type: Sequelize.STRING
-      },
-      address: {
+      name: {
         type: Sequelize.STRING
       },
       createdAt: {
@@ -38,6 +22,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Users');
+    return queryInterface.dropTable('Genres');
   }
 };

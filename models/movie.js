@@ -11,19 +11,30 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Movie.belongsTo(models.Genre, {foreignKey: 'genreId'})
+      Movie.belongsTo(models.User, {foreignKey: 'authorId'})
     }
   };
   Movie.init({
-    title: DataTypes.STRING,
-    synopsis: DataTypes.TEXT,
+    title: {type: DataTypes.STRING,
+      validate: {
+        allowNull: false
+      }},
+    synopsis: {type: DataTypes.TEXT,
+      validate: {
+        allowNull: false
+      }},
     trailerUrl: DataTypes.STRING,
     imgUrl: DataTypes.STRING,
-    rating: DataTypes.INTEGER,
+    rating: {type: DataTypes.INTEGER,
+      validate: {
+        min: 1
+      }},
     genreId: DataTypes.INTEGER,
     authorId: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'Movie',
+    modelName: 'Movie'
   });
   return Movie;
 };

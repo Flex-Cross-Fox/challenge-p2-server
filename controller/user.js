@@ -11,6 +11,11 @@ class user{
             res.status(500).json(data)
         })
     }
+
+    static addUser(req, res){
+        console.log(req.body);
+        let { username, email, password, role, phonumber, address} = req.body
+    }
 };
 
 module.exports = user;
