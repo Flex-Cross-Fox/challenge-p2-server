@@ -20,26 +20,20 @@ module.exports = (sequelize, DataTypes) => {
     email: {type: DataTypes.STRING,
       validate: {
         isEmail: true,
-        notEmpty: true,
-        unique: true
+        notEmpty: true
       }},
     password: {type: DataTypes.STRING,
       validate: {
         notEmpty: true,
-        unique: true,
-        lengthCheck(value){
-          if(value.length < 5){
-            throw new Error('terlalu pendek passwordnya')
-          }
-        }
-      }},
+        len: [5,99]}},
     role: {type: DataTypes.STRING,
       validate: {
-        roleCheck(value){
-          if(value != 'admin' || value != 'staff'){
-            throw new Error('hanya bisa pilih admin atau staff saja')
-          }
-        }
+        isIn: [['admin','staff']]
+        // roleCheck(value){
+        //   if(value != 'admin' && value != 'staff'){
+        //     throw new Error('hanya bisa pilih admin atau staff saja')
+        //   }
+        // }
       }},
     phoneNumber: DataTypes.STRING,
     address: DataTypes.STRING

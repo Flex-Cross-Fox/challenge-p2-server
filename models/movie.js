@@ -18,11 +18,11 @@ module.exports = (sequelize, DataTypes) => {
   Movie.init({
     title: {type: DataTypes.STRING,
       validate: {
-        allowNull: false
+        notEmpty: true
       }},
     synopsis: {type: DataTypes.TEXT,
       validate: {
-        allowNull: false
+        notEmpty: true
       }},
     trailerUrl: DataTypes.STRING,
     imgUrl: DataTypes.STRING,
