@@ -23,9 +23,8 @@ class movie{
     }
 
     static addMovie(req, res){
-        console.log(req.body);
-        let { title, synopsis, trailerUrl, imgUrl, rating, genreId, authorId} = req.body
-        let newMovie = { title, synopsis, trailerUrl, imgUrl, rating, genreId, authorId}
+        let { title, synopsis, trailerUrl, imgUrl, rating, genreId} = req.body
+        let newMovie = { title, synopsis, trailerUrl, imgUrl, rating, genreId, authorId: req.userLogin.id}
         Movie.create(newMovie)
         .then((data) => {
             console.log(data);

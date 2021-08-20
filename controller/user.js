@@ -1,6 +1,6 @@
 const { User } = require('../models');
 const { comparePassword } = require('../helpers/bcrypt');
-const { jwtToken } = require('../helpers/jwt')
+const { Encoded, Decoded } = require('../helpers/jwt')
 
 class user{
     static allUser(req, res){
@@ -59,25 +59,42 @@ class user{
         .catch((err) => {
             res.status(400).json(err)
         })
-    }
+    }//done
 
     static updateRow(req, res){
-        console.log(req.body);
-        // .then((data) => {
-        //     if(data[0] == 1){
-        //         res.status(200).json({msg: 'berhasil update data'})
-        //     }else{
-        //         res.status(400).json({msg: 'id tersebut tidak ada'})
-        //     }
-        // })
-        // .catch((err) => {
-        //     res.status(400).json(err)
-        // })
-    }
+        let { username, email, password, role, phoneNumber, address } = req.body
+        User.update({username, email, password, role, phoneNumber, address}, {where: {id: req.params.id}})
+        .then((data) => {
+            if(data[0] == 1){
+                res.status(200).json({msg: 'berhasil update data'})
+            }else{
+                res.status(400).json({msg: 'id tersebut tidak ada'})
+            }
+        })
+        .catch((err) => {
+            res.status(400).json(err)
+        })
+    }//done
 
     static login(req, res){
-        User.findOne({})
-        // let token = jwtToken()
+        User.findOne({where: {email: req.body.email}})
+        .then((data) => {
+            if(data){
+                let result = comparePassword(req.body.password, data.dataValues.password)
+                if(result){
+                    let jwsToken = Encoded({email: req.body.email})
+                    res.status(200).json({token: jwsToken})
+                }else{
+                    throw new Error('salah email atau password')
+                }
+            }else{
+                throw new Error('salah email atau password')
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(400).json(err)
+        })
     }
 };
 

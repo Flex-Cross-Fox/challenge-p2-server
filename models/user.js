@@ -21,19 +21,16 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         isEmail: true,
         notEmpty: true
+        // allowNull: false
       }},
     password: {type: DataTypes.STRING,
       validate: {
         notEmpty: true,
+        // allowNull: false,
         len: [5,99]}},
     role: {type: DataTypes.STRING,
       validate: {
         isIn: [['admin','staff']]
-        // roleCheck(value){
-        //   if(value != 'admin' && value != 'staff'){
-        //     throw new Error('hanya bisa pilih admin atau staff saja')
-        //   }
-        // }
       }},
     phoneNumber: DataTypes.STRING,
     address: DataTypes.STRING
@@ -42,6 +39,9 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'User',
     hooks: {
       beforeCreate: (user, options) => {
+        user.password = hash(user.password)
+      },
+      beforeUpdate:(user, options) => {
         user.password = hash(user.password)
       }
     }

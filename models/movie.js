@@ -19,10 +19,12 @@ module.exports = (sequelize, DataTypes) => {
     title: {type: DataTypes.STRING,
       validate: {
         notEmpty: true
+        // allowNull: false
       }},
     synopsis: {type: DataTypes.TEXT,
       validate: {
         notEmpty: true
+        // allowNull: false
       }},
     trailerUrl: DataTypes.STRING,
     imgUrl: DataTypes.STRING,
