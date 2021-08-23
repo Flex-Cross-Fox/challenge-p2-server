@@ -15,7 +15,7 @@ class user{
         })
     }//done
 
-    static addUser(req, res){
+    static addUser(req, res, next){
         let { username, email, password, role, phoneNumber, address} = req.body
         let newUser = { username, email, password, role, phoneNumber, address}
         User.create(newUser)
@@ -24,9 +24,12 @@ class user{
             res.status(201).json(data)    
         })
         .catch((err) => {
-            console.log(err);
-            if(err.errors[0].message){
-                res.status(500).json(err.errors[0].message)
+            console.log('masuk line 27');
+            // console.log(err);
+            if(err.errors[0].message == 'Validation isIn on role failed'){
+                console.log(err.errors[0].message,'<----');
+                next({name: 'Validation isIn on role failed'})
+                // res.status(500).json(err.errors[0].message)
             }else{
                 res.status(500).json(err)
             }
