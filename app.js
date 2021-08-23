@@ -10,9 +10,9 @@ const routeIndex = require('./routes/index');
 
 app.use('/', routeIndex);
 
-app.use((req, res, next) => {
-    res.status(404).json({msg: 'error not found'})
-})
+// app.use((req, res, next) => {
+//     res.status(404).json({msg: 'error not found'})
+// })
 
 app.use(errorHandle);
 

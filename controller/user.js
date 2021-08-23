@@ -1,85 +1,84 @@
 const { User } = require('../models');
 const { comparePassword } = require('../helpers/bcrypt');
-const { Encoded, Decoded } = require('../helpers/jwt')
+const { Encoded } = require('../helpers/jwt')
 
 class user{
-    static allUser(req, res){
+    static allUser(req, res, next){
         User.findAll()
         .then((data) => {
-            console.log(data);
             res.status(200).json(data)
         })
         .catch((err) => {
-            console.log(err);
-            res.status(500).json(data)
+            next({name:''})
         })
-    }//done
+    }
 
     static addUser(req, res, next){
         let { username, email, password, role, phoneNumber, address} = req.body
         let newUser = { username, email, password, role, phoneNumber, address}
         User.create(newUser)
         .then((data) => {
-            console.log(data);
+            // console.log(data);
             res.status(201).json(data)    
         })
         .catch((err) => {
-            console.log('masuk line 27');
-            // console.log(err);
             if(err.errors[0].message == 'Validation isIn on role failed'){
-                console.log(err.errors[0].message,'<----');
                 next({name: 'Validation isIn on role failed'})
-                // res.status(500).json(err.errors[0].message)
+            }else if(err.errors[0].message == 'Validation len on password failed'){
+                next({name: 'Validation len on password failed'})
+            }else if(err.errors[0].message == 'email must be unique'){
+                next({name: 'email must be unique'})
             }else{
-                res.status(500).json(err)
+                console.log(err);
+                next({name: ''})
             }
         })
-    }//done
+    }
 
-    static delete(req, res){
+    static delete(req, res, next){
         User.destroy({where: {id: req.params.id}})
         .then((data) => {
             if(data == 0){
-                res.status(400).json({msg: 'id tersebut tidak ada'})
+                next({name: 'id not available'})
             }else{
                 res.status(200).json({msg: 'berhasil delete id tersebut'})
             }
         })
-        .catch((err) => {
-            res.status(500).json(err)
+        .catch(() => {
+            next({name: ''})
         })
-    }//done
+    }
 
-    static aUser(req, res){
+    static aUser(req, res, next){
         User.findOne({where: {id: req.params.id}})
         .then((data) => {
             if(data == null){
-                res.status(400).json({msg: 'id tersebut tidak ada'})
+                next({name: 'id not available'})
             }else{
                 res.status(200).json(data)
             }
         })
-        .catch((err) => {
-            res.status(400).json(err)
+        .catch(() => {
+            next({name: ''})
         })
-    }//done
+    }
 
-    static updateRow(req, res){
+    static updateRow(req, res, next){
         let { username, email, password, role, phoneNumber, address } = req.body
         User.update({username, email, password, role, phoneNumber, address}, {where: {id: req.params.id}})
         .then((data) => {
             if(data[0] == 1){
                 res.status(200).json({msg: 'berhasil update data'})
             }else{
-                res.status(400).json({msg: 'id tersebut tidak ada'})
+                next({name: 'id not available'})
             }
         })
         .catch((err) => {
-            res.status(400).json(err)
+            next({name: ''})
         })
-    }//done
+    }
 
-    static login(req, res){
+    static login(req, res, next){
         User.findOne({where: {email: req.body.email}})
         .then((data) => {
             if(data){
@@ -88,15 +87,14 @@ class user{
                     let jwsToken = Encoded({email: req.body.email})
                     res.status(200).json({token: jwsToken})
                 }else{
-                    throw new Error('salah email atau password')
+                    next({msg: 'salah email atau password'})
                 }
             }else{
-                throw new Error('salah email atau password')
+                next({msg: 'salah email atau password'})
             }
         })
-        .catch((err) => {
-            console.log(err);
-            res.status(400).json(err)
+        .catch(() => {
+            next({name: ''})
         })
     }
 };
