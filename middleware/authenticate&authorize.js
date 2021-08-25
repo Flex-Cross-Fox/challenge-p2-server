@@ -8,9 +8,7 @@ function authenticate(req, res, next){
         User.findOne({where: {email: jwsToken.email}})
         .then((data) => {
             if(data){
-                console.log(data.id);
                 req.userLogin = {id: data.id, role: data.role}
-                console.log(req.userLogin.id);
                 next()
             }else{
                 throw new Error('tidak ada yang login')

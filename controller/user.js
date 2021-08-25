@@ -3,19 +3,19 @@ const { comparePassword } = require('../helpers/bcrypt');
 const { Encoded } = require('../helpers/jwt')
 
 class user{
-    static allUser(req, res, next){
-        User.findAll()
-        .then((data) => {
-            res.status(200).json(data)
-        })
-        .catch((err) => {
-            next({name:''})
-        })
-    }
+    // static allUser(req, res, next){
+    //     User.findAll()
+    //     .then((data) => {
+    //         res.status(200).json(data)
+    //     })
+    //     .catch((err) => {
+    //         next({name:''})
+    //     })
+    // }
 
     static addUser(req, res, next){
-        let { username, email, password, role, phoneNumber, address} = req.body
-        let newUser = { username, email, password, role, phoneNumber, address}
+        let { email, password} = req.body
+        let newUser = { username : 'test', email, password, role: 'admin', phoneNumber: '1234567', address: 'batam'}
         User.create(newUser)
         .then((data) => {
             // console.log(data);
@@ -34,50 +34,7 @@ class user{
             }
         })
     }
-
-    static delete(req, res, next){
-        User.destroy({where: {id: req.params.id}})
-        .then((data) => {
-            if(data == 0){
-                next({name: 'id not available'})
-            }else{
-                res.status(200).json({msg: 'berhasil delete id tersebut'})
-            }
-        })
-        .catch(() => {
-            next({name: ''})
-        })
-    }
-
-    static aUser(req, res, next){
-        User.findOne({where: {id: req.params.id}})
-        .then((data) => {
-            if(data == null){
-                next({name: 'id not available'})
-            }else{
-                res.status(200).json(data)
-            }
-        })
-        .catch(() => {
-            next({name: ''})
-        })
-    }
-
-    static updateRow(req, res, next){
-        let { username, email, password, role, phoneNumber, address } = req.body
-        User.update({username, email, password, role, phoneNumber, address}, {where: {id: req.params.id}})
-        .then((data) => {
-            if(data[0] == 1){
-                res.status(200).json({msg: 'berhasil update data'})
-            }else{
-                next({name: 'id not available'})
-            }
-        })
-        .catch((err) => {
-            next({name: ''})
-        })
-    }
-
+    
     static login(req, res, next){
         User.findOne({where: {email: req.body.email}})
         .then((data) => {
@@ -97,6 +54,50 @@ class user{
             next({name: ''})
         })
     }
+
+    // static delete(req, res, next){
+    //     User.destroy({where: {id: req.params.id}})
+    //     .then((data) => {
+    //         if(data == 0){
+    //             next({name: 'id not available'})
+    //         }else{
+    //             res.status(200).json({msg: 'berhasil delete id tersebut'})
+    //         }
+    //     })
+    //     .catch(() => {
+    //         next({name: ''})
+    //     })
+    // }
+
+    // static aUser(req, res, next){
+    //     User.findOne({where: {id: req.params.id}})
+    //     .then((data) => {
+    //         if(data == null){
+    //             next({name: 'id not available'})
+    //         }else{
+    //             res.status(200).json(data)
+    //         }
+    //     })
+    //     .catch(() => {
+    //         next({name: ''})
+    //     })
+    // }
+
+    // static updateRow(req, res, next){
+    //     let { username, email, password, role, phoneNumber, address } = req.body
+    //     User.update({username, email, password, role, phoneNumber, address}, {where: {id: req.params.id}})
+    //     .then((data) => {
+    //         if(data[0] == 1){
+    //             res.status(200).json({msg: 'berhasil update data'})
+    //         }else{
+    //             next({name: 'id not available'})
+    //         }
+    //     })
+    //     .catch((err) => {
+    //         next({name: ''})
+    //     })
+    // }
+
 };
 
 module.exports = user;
