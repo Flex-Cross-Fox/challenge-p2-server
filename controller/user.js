@@ -1,6 +1,7 @@
 const { User } = require('../models');
 const { comparePassword } = require('../helpers/bcrypt');
 const { Encoded } = require('../helpers/jwt')
+const {OAuth2Client} = require('google-auth-library');
 
 class user{
     // static allUser(req, res, next){
@@ -52,6 +53,37 @@ class user{
         })
         .catch(() => {
             next({name: ''})
+        })
+    }
+    
+    static googleLogin(req, res, next){
+        let payload;
+        const client = new OAuth2Client(process.env.CLIENT_GOOGLE);
+        client.verifyIdToken({
+            idToken: req.body.idtoken,
+            audience: process.env.CLIENT_GOOGLE,  // Specify the CLIENT_ID of the app that accesses the backend
+            // Or, if multiple clients access the backend:
+            //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+        })
+        .then((ticket) => {
+            payload = ticket.getPayload()
+            return User.findOne({where: {email: payload.email}})
+        })
+        .then((data) => {
+            if(!data){
+                return User.create({email: payload.email, password: process.env.PASSWORD_GOOGLE})
+            }else{
+                return { email: data.email, password: data.password}
+            }
+        })
+        .then((data) => {
+            const payload = { email: data.email, id: data.id}
+            const access_token = Encoded(payload)
+            res.status(200).json({ access_token})
+        })
+        .catch((err) => {
+            console.log(err);
+            next(err)
         })
     }
 

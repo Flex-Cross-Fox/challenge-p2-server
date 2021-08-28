@@ -13,4 +13,6 @@ router.post('/register', controller.addUser);
 
 router.post('/login', controller.login);
 
+router.post('/google-login', controller.googleLogin);
+
 module.exports = router;
