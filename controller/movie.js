@@ -21,43 +21,46 @@ class movie{
     }
 
     static addMovie(req, res, next){
-        let { title, synopsis, trailerUrl, imgUrl, rating, genreId} = req.body
-        let newMovie = { title, synopsis, trailerUrl, imgUrl, rating, genreId, authorId: req.userLogin.id}
-        Movie.create(newMovie)
-        .then((data) => {
-            res.status(201).json(data)
-        })
-        .catch((err) => {
-            if(err.name == 'SequelizeForeignKeyConstraintError'){
-                next({name: 'SequelizeForeignKeyConstraintError'})
-            }else if(err.errors[0].message == 'Validation min on rating failed'){
-                next({name: 'Validation min on rating failed'})
-            }else if(err.errors[0].message == 'Validation notEmpty on title failed'){
-                next({name: 'Validation notEmpty on title failed'})
-            }else{
-                next({name: ''})
-            }
-        })
+        console.log(req.file);
+        // let { title, synopsis, trailerUrl, imgUrl, rating, genreId} = req.body
+        // let newMovie = { title, synopsis, trailerUrl, imgUrl, rating, genreId, authorId: req.userLogin.id}
+        // Movie.create(newMovie)
+        // .then((data) => {
+        //     res.status(201).json(data)
+        // })
+        // .catch((err) => {
+        //     if(err.name == 'SequelizeForeignKeyConstraintError'){
+        //         next({name: 'SequelizeForeignKeyConstraintError'})
+        //     }else if(err.errors[0].message == 'Validation min on rating failed'){
+        //         next({name: 'Validation min on rating failed'})
+        //     }else if(err.errors[0].message == 'Validation notEmpty on title failed'){
+        //         next({name: 'Validation notEmpty on title failed'})
+        //     }else{
+        //         next({name: ''})
+        //     }
+        // })
     }
 
     static updateRow(req, res, next){
-        let { title, synopsis, trailerUrl, imgUrl, rating, genreId, authorId} = req.body
-        let newMovie = { title, synopsis, trailerUrl, imgUrl, rating, genreId, authorId}
-        Movie.update(newMovie,{where: {id: req.params.id}, returning: true})
-        .then((data) => {
-            res.status(200).json(data[1][0])
-        })
-        .catch((err) => {
-            if(err[0] == 0){
-                next({name: 'id not available'})
-            }else if(err.errors[0].message == 'Validation notEmpty on title failed'){
-                next({name: 'Validation notEmpty on title failed'})
-            }else if(err.errors[0].message == 'Validation min on rating failed'){
-                next({name: 'Validation min on rating failed'})
-            }else{
-                next({name: ''})
-            }
-        })
+        console.log(req.file);
+        console.log(req.body);
+        // let { title, synopsis, trailerUrl, imgUrl, rating, genreId, authorId} = req.body
+        // let newMovie = { title, synopsis, trailerUrl, imgUrl, rating, genreId, authorId}
+        // Movie.update(newMovie,{where: {id: req.params.id}, returning: true})
+        // .then((data) => {
+        //     res.status(200).json(data[1][0])
+        // })
+        // .catch((err) => {
+        //     if(err[0] == 0){
+        //         next({name: 'id not available'})
+        //     }else if(err.errors[0].message == 'Validation notEmpty on title failed'){
+        //         next({name: 'Validation notEmpty on title failed'})
+        //     }else if(err.errors[0].message == 'Validation min on rating failed'){
+        //         next({name: 'Validation min on rating failed'})
+        //     }else{
+        //         next({name: ''})
+        //     }
+        // })
     }
 
     static delete(req, res, next){
