@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       User.hasMany(models.Movie, {foreignKey: 'authorId'})
+      User.hasMany(models.History, {foreignKey: 'updatedBy'})
     }
   };
   User.init({

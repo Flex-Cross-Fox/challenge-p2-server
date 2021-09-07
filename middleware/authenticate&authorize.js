@@ -42,4 +42,12 @@ function authorizeAdmin(req, res, next){
     }
 };
 
-module.exports = { authenticate, authorizeAdmin };
+function statusAdminOnly(req, res, next){
+    if(req.userLogin.role == 'admin'){
+        next()
+    }else{
+        next({name: ''})
+    }
+}
+
+module.exports = { authenticate, authorizeAdmin, statusAdminOnly };

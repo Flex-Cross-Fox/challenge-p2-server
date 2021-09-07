@@ -1,7 +1,7 @@
-let { Movie } = require('../models')
+let { Movie, History } = require('../models')
 class movie{
     static allMovie(req, res, next){
-        Movie.findAll()
+        Movie.findAll({where: {status: 'active'}})
         .then((data) => {
             res.status(200).json(data)
         })
@@ -21,12 +21,14 @@ class movie{
     }
 
     static addMovie(req, res, next){
-        // console.log(req.file);
-        let { title, synopsis, trailerUrl, rating, genreId} = req.body
-        let newMovie = { title, synopsis, trailerUrl, imgUrl:req.body.imageUrl , rating, genreId, authorId: req.userLogin.id}
+        let { title, synopsis, trailerUrl, rating,status, genreId} = req.body
+        let newMovie = { title, synopsis, trailerUrl, status, imgUrl:req.body.imageUrl , rating, genreId, authorId: req.userLogin.id}
         Movie.create(newMovie)
         .then((data) => {
-            // console.log(data);
+            return History.create({entityId: data.id, title: data.title, description: 'new entity with id created', updatedBy: data.authorId})
+        })
+        .then((data) => {
+            console.log(data);
             res.status(201).json(data)
         })
         .catch((err) => {
@@ -43,17 +45,26 @@ class movie{
         })
     }
 
-    static updateRow(req, res, next){
+    static updateRow(req, res, next){//put
+        // entity with id updated
+        console.log('50 ini update ROW');
+        let newMovie;
         let image = req.body.imageUrl
-        // console.log(image);
-        // console.log(req.file);
-        // console.log(req.body);
-        let { title, synopsis, trailerUrl, rating, genreId} = req.body
-        let newMovie = { title, synopsis, trailerUrl, rating, genreId, authorId: req.userLogin.id , imgUrl : image}
+        let { title, synopsis, trailerUrl, rating, status ,genreId} = req.body
+        if(image){
+            console.log('ada image');
+            newMovie = { title, synopsis, trailerUrl, rating, status, genreId, authorId: req.userLogin.id , imgUrl : image}
+        }else{
+            console.log('gk ada image');
+            newMovie = { title, synopsis, trailerUrl, rating, status, genreId, authorId: req.userLogin.id}
+        }
         Movie.update(newMovie,{where: {id: req.params.id}, returning: true})
         .then((data) => {
+            return History.create({entityId: data[1][0].id, title: data[1][0].title, description: 'entity with id updated', updatedBy: data[1][0].authorId})
+        })
+        .then((data) => {
             if(data){
-                res.status(200).json(data[1][0])
+                res.status(200).json(data)
             }else if(err[0] == 0){
                 next({name: 'id not available'})
             }else if(err.errors[0].message == 'Validation notEmpty on title failed'){
@@ -78,12 +89,48 @@ class movie{
     }
 
     static delete(req, res, next){
-        Movie.destroy({where: {id: req.params.id}})
+        // entity with id permanent deleted
+        Movie.update({status: 'archived'}, {where: {id: req.params.id}, returning: true})
         .then((data) => {
+            // if(data){
+            //     res.status(200).json({message: 'todo success to delete'})
+            // }else{
+            //     next({name: 'id not available'})
+            // }
+            return History.create({entityId: data[1][0].id, title: data[1][0].title, description: 'entity with id permanent deleted', updatedBy: data[1][0].authorId})
+        })
+        .then((data) => {
+            console.log(data);
             if(data){
                 res.status(200).json({message: 'todo success to delete'})
             }else{
                 next({name: 'id not available'})
+            }
+        })
+        .catch((err) => {
+            console.log('-----------');
+            console.log(err);
+            next({name: ''})
+        })
+    }
+
+    static patch(req, res, next){
+        Movie.update({status: 'inactive'}, {where: {id: req.params.id}, returning: true})
+        .then((data) => {
+            return History.create({entityId: data[1][0].id, title: data[1][0].title, description: 'entity with id status has been updated from active into inactive', updatedBy: data[1][0].authorId})
+            // console.log(data);
+            // if(data){
+            //     res.status(200).json(data[1][0])
+            // }else{
+            //     next({name: ''})
+            // }
+        })
+        .then((data) => {
+            console.log(data);
+            if(data){
+                res.status(200).json(data)
+            }else{
+                next({name: ''})
             }
         })
         .catch(() => {

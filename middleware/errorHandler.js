@@ -12,6 +12,10 @@ const errorHandle = (err, req, res,next) => {
             statusCode = 400
             errors.push('password nya terlalu pendek, minimal harus 5 alfabet atau angka')
             break;
+        case "maximum file":
+            statusCode = 400
+            errors.push('maximum file size 225KB, ini sudah lewat')
+            break;
         case "email must be unique":
             statusCode = 400
             errors.push('email ini sudah di pakai sama user lain, mohon pakai email lain dan tidak boleh sama email nya')
