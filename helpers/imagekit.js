@@ -1,7 +1,7 @@
 const FormData = require('form-data');
 const axios = require('axios')
 
-function adaFoto(req){
+function adaFoto(req, res, next){
   const form = new FormData()
     
   form.append('file', req.file.buffer.toString('base64'))
@@ -30,17 +30,23 @@ function adaFoto(req){
 
 async function imageKit(req, res, next) {
   if(req.params.id && !req.file){
+    console.log('disini line 33');
     next()
   }else if(req.params.id){
-    adaFoto(req)
+    console.log('ada file');
+    adaFoto(req, res, next)
   }else{
+    console.log('masuk image kit');
     if (!req.file) {
+      console.log('gk ada image');
       next({ name: 'file required' })
     } else {
       if(req.file.size > 225000){
+        console.log('file terlalu besar');
         next({name : 'maximum file'})
       }else{
-        adaFoto(req)
+        console.log('ada file lagi');
+        adaFoto(req, res, next)
         // // console.log(req.file);
         // const form = new FormData()
     

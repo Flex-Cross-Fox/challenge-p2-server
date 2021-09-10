@@ -15,14 +15,15 @@ class user{
     // }
 
     static addUser(req, res, next){
-        let { email, password} = req.body
-        let newUser = { username : 'test', email, password, role: 'admin', phoneNumber: '1234567', address: 'batam'}
+        let { name, role, email, password} = req.body
+        let newUser = { username : name, email, password, role, phoneNumber: '1234567', address: 'batam'}
         User.create(newUser)
         .then((data) => {
             // console.log(data);
             res.status(201).json(data)    
         })
         .catch((err) => {
+            console.log(err);
             if(err.errors[0].message == 'Validation isIn on role failed'){
                 next({name: 'Validation isIn on role failed'})
             }else if(err.errors[0].message == 'Validation len on password failed'){
@@ -30,7 +31,6 @@ class user{
             }else if(err.errors[0].message == 'email must be unique'){
                 next({name: 'email must be unique'})
             }else{
-                console.log(err);
                 next({name: ''})
             }
         })

@@ -1,7 +1,7 @@
-let { Movie, History } = require('../models')
+let { Movie, History, Genre } = require('../models')
 class movie{
     static allMovie(req, res, next){
-        Movie.findAll({where: {status: 'active'}})
+        Movie.findAll({include: Genre})
         .then((data) => {
             res.status(200).json(data)
         })
@@ -21,17 +21,21 @@ class movie{
     }
 
     static addMovie(req, res, next){
-        let { title, synopsis, trailerUrl, rating,status, genreId} = req.body
-        let newMovie = { title, synopsis, trailerUrl, status, imgUrl:req.body.imageUrl , rating, genreId, authorId: req.userLogin.id}
+        let { title, synopsis, trailerUrl, rating, genreId} = req.body
+        console.log(req.body);
+        console.log('berhasil masuk line 26');
+        let newMovie = { title, synopsis, trailerUrl, status: 'active', imgUrl:req.body.imageUrl , rating, genreId, authorId: req.userLogin.id}
         Movie.create(newMovie)
         .then((data) => {
             return History.create({entityId: data.id, title: data.title, description: 'new entity with id created', updatedBy: data.authorId})
         })
         .then((data) => {
             console.log(data);
+            console.log('di line 34');
             res.status(201).json(data)
         })
         .catch((err) => {
+            console.log('di line 38');
             console.log(err);
             if(err.name == 'SequelizeForeignKeyConstraintError'){
                 next({name: 'SequelizeForeignKeyConstraintError'})
