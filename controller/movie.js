@@ -55,6 +55,7 @@ class movie{
         let newMovie;
         let image = req.body.imageUrl
         let { title, synopsis, trailerUrl, rating, status ,genreId} = req.body
+        console.log(req.body);
         if(image){
             console.log('ada image');
             newMovie = { title, synopsis, trailerUrl, rating, status, genreId, authorId: req.userLogin.id , imgUrl : image}
@@ -80,6 +81,7 @@ class movie{
             }
         })
         .catch((err) => {
+            console.log(err);
             if(err[0] == 0){
                 next({name: 'id not available'})
             }else if(err.errors[0].message == 'Validation notEmpty on title failed'){

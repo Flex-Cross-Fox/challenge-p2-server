@@ -31,6 +31,7 @@ function adaFoto(req, res, next){
 async function imageKit(req, res, next) {
   if(req.params.id && !req.file){
     console.log('disini line 33');
+    console.log(req.body);
     next()
   }else if(req.params.id){
     console.log('ada file');
