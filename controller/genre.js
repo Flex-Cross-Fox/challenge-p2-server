@@ -16,11 +16,7 @@ class GenreController{
             res.status(201).json(data)
         })
         .catch((err) => {
-            if(err.errors[0].message){
-                next({name: 'Validation notEmpty on name failed'})
-            }else{
-                next({name: ''})
-            }
+            next({name: 'errors', error: err.errors})
         })
     }
 
@@ -33,8 +29,7 @@ class GenreController{
                 res.status(200).json(data)
             }
         })
-        .catch((err) => {
-            next({name: ''})
+        .catch(() => {
         })
     }
 
@@ -47,8 +42,7 @@ class GenreController{
                 res.status(200).json({msg: 'berhasil delete id tersebut'})
             }
         })
-        .catch((err) => {
-            next({name: ''})
+        .catch(() => {
         })
     }
 
@@ -62,7 +56,6 @@ class GenreController{
             }
         })
         .catch(() => {
-            next({name: ''})
         })
     }
 }

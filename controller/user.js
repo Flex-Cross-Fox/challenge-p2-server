@@ -4,37 +4,17 @@ const { Encoded } = require('../helpers/jwt')
 const {OAuth2Client} = require('google-auth-library');
 
 class user{
-    // static allUser(req, res, next){
-    //     User.findAll()
-    //     .then((data) => {
-    //         res.status(200).json(data)
-    //     })
-    //     .catch((err) => {
-    //         next({name:''})
-    //     })
-    // }
-
     static addUser(req, res, next){
-        let { name, role, email, password} = req.body
-        let newUser = { username : name, email, password, role, phoneNumber: '1234567', address: 'batam'}
+        let { username, role, email, password} = req.body
+        let newUser = { username, email, password, role, phoneNumber: '1234567', address: 'batam'}
         User.create(newUser)
         .then((data) => {
-            // console.log(data);
             res.status(201).json(data)    
         })
         .catch((err) => {
-            console.log(err);
-            if(err.errors[0].message == 'Validation isIn on role failed'){
-                next({name: 'Validation isIn on role failed'})
-            }else if(err.errors[0].message == 'Validation len on password failed'){
-                next({name: 'Validation len on password failed'})
-            }else if(err.errors[0].message == 'email must be unique'){
-                next({name: 'email must be unique'})
-            }else{
-                next({name: ''})
-            }
+            next({name: err.name, error: err.errors})
         })
-    }
+    }//done
     
     static login(req, res, next){
         User.findOne({where: {email: req.body.email}})
@@ -45,14 +25,14 @@ class user{
                     let jwsToken = Encoded({email: req.body.email})
                     res.status(200).json({token: jwsToken})
                 }else{
-                    next({msg: 'salah email atau password'})
+                    next({name: 'email atau password salah'})
                 }
             }else{
-                next({msg: 'salah email atau password'})
+                next({name: 'email atau password salah'})
             }
         })
         .catch(() => {
-            next({name: ''})
+            
         })
     }
     
@@ -61,9 +41,7 @@ class user{
         const client = new OAuth2Client(process.env.CLIENT_GOOGLE);
         client.verifyIdToken({
             idToken: req.body.idtoken,
-            audience: process.env.CLIENT_GOOGLE,  // Specify the CLIENT_ID of the app that accesses the backend
-            // Or, if multiple clients access the backend:
-            //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+            audience: process.env.CLIENT_GOOGLE
         })
         .then((ticket) => {
             payload = ticket.getPayload()
@@ -86,50 +64,6 @@ class user{
             next(err)
         })
     }
-
-    // static delete(req, res, next){
-    //     User.destroy({where: {id: req.params.id}})
-    //     .then((data) => {
-    //         if(data == 0){
-    //             next({name: 'id not available'})
-    //         }else{
-    //             res.status(200).json({msg: 'berhasil delete id tersebut'})
-    //         }
-    //     })
-    //     .catch(() => {
-    //         next({name: ''})
-    //     })
-    // }
-
-    // static aUser(req, res, next){
-    //     User.findOne({where: {id: req.params.id}})
-    //     .then((data) => {
-    //         if(data == null){
-    //             next({name: 'id not available'})
-    //         }else{
-    //             res.status(200).json(data)
-    //         }
-    //     })
-    //     .catch(() => {
-    //         next({name: ''})
-    //     })
-    // }
-
-    // static updateRow(req, res, next){
-    //     let { username, email, password, role, phoneNumber, address } = req.body
-    //     User.update({username, email, password, role, phoneNumber, address}, {where: {id: req.params.id}})
-    //     .then((data) => {
-    //         if(data[0] == 1){
-    //             res.status(200).json({msg: 'berhasil update data'})
-    //         }else{
-    //             next({name: 'id not available'})
-    //         }
-    //     })
-    //     .catch((err) => {
-    //         next({name: ''})
-    //     })
-    // }
-
 };
 
 module.exports = user;

@@ -364,43 +364,46 @@ Register User
     None
 
 - Data Params
-
+```
     {
         username: 'albert',
         role: 'admin',
         email: 'albert@gmail.com',
-        password: '123456',
-        phoneNumber: '08111234567',
-        address: 'batam'
+        password: '123456'
     }
-
+```
 - Success Response
 
     Code: 200
 
     Content:
-
-    data
+```
+{
+    "id": 5,
+    "username": "kwok",
+    "email": "kwok@gmail.com",
+    "password": "$2a$10$gOYmqQPIWTqbNGtkcB7EAeWZ5E0SObAyI1hEsDgSFFFlCP8wdKOdC",
+    "role": "admin",
+    "phoneNumber": "1234567",
+    "address": "batam",
+    "updatedAt": "2021-09-13T08:06:01.948Z",
+    "createdAt": "2021-09-13T08:06:01.948Z"
+}
+```
 
 - Error Response
-
-    {name: ''}
-
-- Error Response if role failed
-
-{name: 'Validation isIn on role failed'}
-
-- Error Response if password failed
-
-{name: 'Validation len on password failed'}
-
-- Error Response if email failed or not unique
-
-{name: 'email must be unique'}
+```
+{
+    "errors": [
+        "Validation notEmpty on password failed",
+        "Validation len on password failed"
+    ]
+}
+```
 
 Login User
 
-    POST User
+    POST
 
 - URL
     
@@ -427,15 +430,24 @@ Login User
 
     Content:
 
-    data
+```
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFyaXN0b0BnbWFpbC5jb20iLCJpYXQiOjE2MzE1MzkyMjR9.IkV9HvRvXNXHGbkkFxJu6XV-OwG8u0QVD3nl6larNZA"
+}
+```
 
 - Error Response
-
-    {name: ''}
-
+```
+{
+    "errors": "Internal Server Errors"
+}
+```
 - Error Response if password or email wrong
-
-    {msg: 'salah email atau password'}
+{
+    "errors": [
+        "email atau password salah"
+    ]
+}
 
 Login user with google
 
@@ -495,7 +507,22 @@ Genres DISPLAY ALL
 
     Content:
 
-    data
+```
+[
+    {
+        "id": 1,
+        "name": "guo",
+        "createdAt": "2021-09-04T04:20:20.412Z",
+        "updatedAt": "2021-09-04T04:20:20.412Z"
+    },
+    {
+        "id": 2,
+        "name": "aristo",
+        "createdAt": "2021-09-04T04:20:25.719Z",
+        "updatedAt": "2021-09-04T04:20:25.719Z"
+    }
+]
+```
 
 - Error Response
 
@@ -525,7 +552,14 @@ Genres DISPLAY BY ID
 
     Content:
 
-    data
+```
+{
+    "id": 1,
+    "name": "guo",
+    "createdAt": "2021-09-04T04:20:20.412Z",
+    "updatedAt": "2021-09-04T04:20:20.412Z"
+}
+```
 
 - Error Response
 
@@ -552,7 +586,7 @@ Add Genres
 - Data Params
 
     {
-        name: 'aristo'
+        name: 'test999'
     }
 
 - Success Response
@@ -560,8 +594,14 @@ Add Genres
     Code: 200
 
     Content:
-
-    data
+```
+{
+    "id": 4,
+    "name": "test999",
+    "updatedAt": "2021-09-13T14:16:08.743Z",
+    "createdAt": "2021-09-13T14:16:08.743Z"
+}
+```
 
 - Error Response
 
@@ -594,12 +634,21 @@ DELETE Genres
     Code: 200
 
     Content:
-
-    {msg: 'berhasil delete id tersebut'}
+```
+{
+    "msg": "berhasil delete id tersebut"
+}
+```
 
 - Error Response IF id empty or not available
 
-    id not available
+```
+{
+    "errors": [
+        "id not available"
+    ]
+}
+```
 
 PUT Genres
 
@@ -627,11 +676,21 @@ PUT Genres
 
     Content:
 
-    {msg: 'berhasil update data'}
+```
+{
+    "msg": "berhasil update data"
+}
+```
 
 - Error Response IF id empty or not available
 
-    id not available
+```
+{
+    "errors": [
+        "id not available"
+    ]
+}
+```
 
 <!-- - Error Response When web not found
 

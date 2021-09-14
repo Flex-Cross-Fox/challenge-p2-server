@@ -49,8 +49,7 @@ class movie{
         })
     }
 
-    static updateRow(req, res, next){//put
-        // entity with id updated
+    static updateRow(req, res, next){
         console.log('50 ini update ROW');
         let newMovie;
         let image = req.body.imageUrl
@@ -95,14 +94,8 @@ class movie{
     }
 
     static delete(req, res, next){
-        // entity with id permanent deleted
         Movie.update({status: 'archived'}, {where: {id: req.params.id}, returning: true})
         .then((data) => {
-            // if(data){
-            //     res.status(200).json({message: 'todo success to delete'})
-            // }else{
-            //     next({name: 'id not available'})
-            // }
             return History.create({entityId: data[1][0].id, title: data[1][0].title, description: 'entity with id permanent deleted', updatedBy: data[1][0].authorId})
         })
         .then((data) => {
@@ -124,12 +117,6 @@ class movie{
         Movie.update({status: 'inactive'}, {where: {id: req.params.id}, returning: true})
         .then((data) => {
             return History.create({entityId: data[1][0].id, title: data[1][0].title, description: 'entity with id status has been updated from active into inactive', updatedBy: data[1][0].authorId})
-            // console.log(data);
-            // if(data){
-            //     res.status(200).json(data[1][0])
-            // }else{
-            //     next({name: ''})
-            // }
         })
         .then((data) => {
             console.log(data);
