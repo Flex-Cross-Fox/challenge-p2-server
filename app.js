@@ -18,6 +18,8 @@ app.use('/', routeIndex);
 
 app.use(errorHandle);
 
-app.listen(port ,() => {
-    console.log(`${port} ada`);
-});
+// app.listen(port ,() => {
+//     console.log(`${port} ada`);
+// });
+
+module.exports = app

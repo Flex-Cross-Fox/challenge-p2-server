@@ -7,8 +7,9 @@ const storage = multer.memoryStorage()
 const upload = multer({ storage: storage})
 
 const imageKit = require('../helpers/imagekit');
-router.use('/', authenticate)
+router.get('/pag/:id', controller.pagination)
 router.get('/', controller.allMovie);
+router.use('/', authenticate)
 router.get('/:id', controller.aMovie);
 router.post('/', upload.single('fileInput'), imageKit ,controller.addMovie);
 router.use('/:id', authorizeAdmin)

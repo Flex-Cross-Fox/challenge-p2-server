@@ -9,10 +9,14 @@ class user{
         let newUser = { username, email, password, role, phoneNumber: '1234567', address: 'batam'}
         User.create(newUser)
         .then((data) => {
-            res.status(201).json(data)    
+            // console.log(data);
+            let { username, email, role, phoneNumber, address } = data
+            res.status(201).json({username, email, role, phoneNumber, address})    
         })
         .catch((err) => {
-            next({name: err.name, error: err.errors})
+            // console.log(err);
+            // console.log(err.errors[0].message);
+            next(err)
         })
     }//done
     

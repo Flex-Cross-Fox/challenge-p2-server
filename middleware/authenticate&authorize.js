@@ -24,7 +24,7 @@ function authenticate(req, res, next){
 };
 
 function authorizeAdmin(req, res, next){
-    if(req.userLogin.role == 'admin'){
+    if(req.userLogin.role == 'admicn'){
         next()
     }else{
         Movie.findOne({where: {id: req.params.id}})

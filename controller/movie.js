@@ -1,12 +1,67 @@
+const { Op } = require("sequelize");
 let { Movie, History, Genre } = require('../models')
 class movie{
-    static allMovie(req, res, next){
-        Movie.findAll({include: Genre})
+    static pagination(req, res, next){
+        if(!req.query.title){
+            req.query.title = ''
+        }
+        if(!req.query.synopsis){
+            req.query.synopsis = ''
+        }
+        if(!req.query.page){
+            req.query.page = 1
+        }
+        console.log(req.query.synopsis);
+        Movie.findAll({
+            limit: 5,
+            offset: ((req.query.page - 1) * 5),
+            order: [["id",'ASC']],
+            where: { 
+                    id: req.params.id
+                    // title: { [Op.like]: `%${req.query.title}%`}, 
+                    // synopsis: { [Op.like]: `%${req.query.synopsis}%`} 
+                }
+        },{
+            include: Genre
+        })
         .then((data) => {
             res.status(200).json(data)
         })
         .catch((err) => {
-            next({name: ''})
+            console.log(err);
+            next(err)
+        })
+    }
+
+    static allMovie(req, res, next){
+        if(!req.query.title){
+            req.query.title = ''
+        }
+        if(!req.query.synopsis){
+            req.query.synopsis = ''
+        }
+        if(!req.query.page){
+            req.query.page = 1
+        }
+        Movie.findAll({
+            limit: 5,
+            offset: ((req.query.page - 1) * 5),
+            order: [["id",'ASC']],
+            where: { 
+                    title: { [Op.like]: `%${req.query.title}%`}, 
+                    synopsis: { [Op.like]: `%${req.query.synopsis}%`} 
+                }
+        },{
+            include: Genre
+        })
+        .then((data) => {
+            // res.status(200).json({id: data[0].id, title: data[0].title, synopsis: data[0].synopsis,trailerUrl: data[0].trailerUrl, imgUrl: data[0].imgUrl, rating: data[0].rating, genreId: data[0].genreId, authorId: data[0].authorId, status: data[0].status})
+            res.status(200).json(data)
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(400).json(err)
+            // next(err)
         })
     }
 
