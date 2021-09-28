@@ -9,9 +9,10 @@ const upload = multer({ storage: storage})
 const imageKit = require('../helpers/imagekit');
 router.get('/pag/:id', controller.pagination)
 router.get('/', controller.allMovie);
-router.use('/', authenticate)
+// router.use('/', authenticate)
 router.get('/:id', controller.aMovie);
-router.post('/', upload.single('fileInput'), imageKit ,controller.addMovie);
+router.post('/', controller.addMovie);
+// router.post('/', upload.single('fileInput'), imageKit ,controller.addMovie);
 router.use('/:id', authorizeAdmin)
 router.delete('/:id', controller.delete);
 router.patch('/:id', statusAdminOnly, controller.patch);

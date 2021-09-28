@@ -28,6 +28,14 @@ const errorHandle = (err, req, res,next) => {
             statusCode = 400
             errorsArray.push('email atau password salah')
             break;
+        case 'sudah favorite':
+            statusCode = 400
+            errorsArray.push('sudah favorite')
+            break;
+        case 'tidak ada favorite tersebut':
+            statusCode = 400
+            errorsArray.push('tidak ada favorite tersebut')
+            break;
         default:
             statusCode = 500
             errorsArray = 'Internal Server Errors'

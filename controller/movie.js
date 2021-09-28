@@ -79,7 +79,8 @@ class movie{
         let { title, synopsis, trailerUrl, rating, genreId} = req.body
         console.log(req.body);
         console.log('berhasil masuk line 26');
-        let newMovie = { title, synopsis, trailerUrl, status: 'active', imgUrl:req.body.imageUrl , rating, genreId, authorId: req.userLogin.id}
+        let newMovie = { title, synopsis, trailerUrl, status: 'active', imgUrl: 'google' , rating, genreId, authorId: 3}
+        // let newMovie = { title, synopsis, trailerUrl, status: 'active', imgUrl:req.body.imageUrl , rating, genreId, authorId: req.userLogin.id}
         Movie.create(newMovie)
         .then((data) => {
             return History.create({entityId: data.id, title: data.title, description: 'new entity with id created', updatedBy: data.authorId})

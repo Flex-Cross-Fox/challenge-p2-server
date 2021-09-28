@@ -6,9 +6,10 @@ const {OAuth2Client} = require('google-auth-library');
 class user{
     static addUser(req, res, next){
         let { username, role, email, password} = req.body
-        let newUser = { username, email, password, role, phoneNumber: '1234567', address: 'batam'}
+        let newUser = { username, email, password, role, phoneNumber: '08123456', address: 'batam'}
         User.create(newUser)
         .then((data) => {
+            console.log(newUser);
             // console.log(data);
             let { username, email, role, phoneNumber, address } = data
             res.status(201).json({username, email, role, phoneNumber, address})    
@@ -16,11 +17,14 @@ class user{
         .catch((err) => {
             // console.log(err);
             // console.log(err.errors[0].message);
+            console.log('====');
+            console.log(err);
             next(err)
         })
     }//done
     
     static login(req, res, next){
+        console.log('masuk login di server');
         User.findOne({where: {email: req.body.email}})
         .then((data) => {
             if(data){
@@ -28,6 +32,7 @@ class user{
                 if(result){
                     let jwsToken = Encoded({email: req.body.email})
                     res.status(200).json({token: jwsToken})
+                    console.log('dapat access token');
                 }else{
                     next({name: 'email atau password salah'})
                 }
@@ -35,8 +40,8 @@ class user{
                 next({name: 'email atau password salah'})
             }
         })
-        .catch(() => {
-            
+        .catch((err) => {
+            console.log(err);
         })
     }
     

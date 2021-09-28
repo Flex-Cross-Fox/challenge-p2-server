@@ -5,6 +5,7 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Movie extends Model {
     static associate(models) {
+      Movie.hasMany(models.bookmark, {foreignKey: 'noMovie'})
       Movie.belongsTo(models.Genre, {foreignKey: 'genreId'})
       Movie.belongsTo(models.User, {foreignKey: 'authorId'})
       Movie.hasMany(models.History, { foreignKey: 'entityId'})
