@@ -13,14 +13,12 @@ class movie{
         }
         console.log(req.query.synopsis);
         Movie.findAll({
-            limit: 5,
-            offset: ((req.query.page - 1) * 5),
             order: [["id",'ASC']],
-            where: { 
-                    id: req.params.id
+            // where: { 
+            //         id: req.params.id
                     // title: { [Op.like]: `%${req.query.title}%`}, 
                     // synopsis: { [Op.like]: `%${req.query.synopsis}%`} 
-                }
+                // }
         },{
             include: Genre
         })
@@ -34,22 +32,28 @@ class movie{
     }
 
     static allMovie(req, res, next){
+        let endYear;
         if(!req.query.title){
             req.query.title = ''
         }
-        if(!req.query.synopsis){
-            req.query.synopsis = ''
+        if(!req.query.start){
+            req.query.start = 1000
+            let date = new Date()
+            endYear = date.getFullYear()
+        }else{
+            endYear = req.query.start
         }
         if(!req.query.page){
             req.query.page = 1
         }
         Movie.findAll({
-            limit: 5,
-            offset: ((req.query.page - 1) * 5),
+            limit: 9,
+            offset: ((req.query.page - 1) * 9),
             order: [["id",'ASC']],
             where: { 
                     title: { [Op.like]: `%${req.query.title}%`}, 
-                    synopsis: { [Op.like]: `%${req.query.synopsis}%`} 
+                    // synopsis: { [Op.like]: `%${req.query.synopsis}%`} 
+                    createdAt: { [Op.and]: [{ [Op.gte]: `${req.query.start}-01-01 00:00:01.908+07` }, { [Op.lte]: `${endYear}-12-31 23:59:59.908+07` }] }
                 }
         },{
             include: Genre
@@ -62,6 +66,22 @@ class movie{
             console.log(err);
             res.status(400).json(err)
             // next(err)
+        })
+    }
+
+    static yearMovie(req, res, next){
+        Movie.findAll({where: {
+            createdAt: { [Op.like]: `2021-`}
+        }},{
+            include: Genre
+        })
+        .then((data) => {
+            console.log(data);
+            res.status(200).json(data)
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).json(err)
         })
     }
 
@@ -186,6 +206,10 @@ class movie{
             next({name: ''})
         })
     }
+
+    // static search(req, res, next) {
+    //     Movie.findAll()
+    // }
 }
 
 module.exports = movie;
