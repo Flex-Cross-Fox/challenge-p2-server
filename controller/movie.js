@@ -52,6 +52,7 @@ class movie{
             order: [["id",'ASC']],
             where: { 
                     title: { [Op.like]: `%${req.query.title}%`}, 
+                    status: 'active',
                     // synopsis: { [Op.like]: `%${req.query.synopsis}%`} 
                     createdAt: { [Op.and]: [{ [Op.gte]: `${req.query.start}-01-01 00:00:01.908+07` }, { [Op.lte]: `${endYear}-12-31 23:59:59.908+07` }] }
                 }

@@ -15,8 +15,6 @@ class user{
             res.status(201).json({username, email, role, phoneNumber, address})    
         })
         .catch((err) => {
-            // console.log(err);
-            // console.log(err.errors[0].message);
             console.log('====');
             console.log(err);
             next(err)
